@@ -1,0 +1,17 @@
+.idea/
+*.pyc
+*.docx
+*.tar.gz
+dataset/robust
+__pycache__
+.DS_STORE
+dataset/train_bak1.json
+ernie10/*
+!ernie10/.gitkeep
+finetuned_model/*
+!finetuned_model/.gitkeep
+roberta_wwm_ext/*
+!roberta_wwm_ext/.gitkeep
+roberta_wwm_ext_large/*
+!roberta_wwm_ext_large/.gitkeep
+bin/download.sh
