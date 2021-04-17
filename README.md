@@ -1,7 +1,7 @@
 # LICS2021 MRC
 
 ## 1. 项目&任务介绍
-本项目基于官方给定的baseline（[**DuReader-Checklist-BASELINE**](https://github.com/PaddlePaddle/Research/tree/master/NLP/DuReader-Checklist-BASELINE)）进行二次改造，对核心网络结构添加了注释，解耦了数据读取的模块，并添加了阈值确认的功能。
+本项目基于官方给定的baseline（[**DuReader-Checklist-BASELINE**](https://github.com/PaddlePaddle/Research/tree/master/NLP/DuReader-Checklist-BASELINE)）进行二次改造，对整个代码框架做了简单的重构，对核心网络结构添加了注释，解耦了数据读取的模块，并添加了阈值确认的功能，一些小的细节也做了改进。
 
 本次任务为[2021语言与智能技术竞赛](http://lic2021.ccf.org.cn/)：机器阅读理解任务，机器阅读理解 (Machine Reading Comprehension) 是指让机器阅读文本，然后回答和阅读内容相关的问题。
 
@@ -197,7 +197,7 @@ scipy                     1.6.2
 
 其中文件夹`roberta_wwm_ext_large`、`roberta_wwm_ext`、`ernie10`是百度官方的预训练模型，文件夹`finetuned_model`是官方基于ernie10微调的模型，可以直接用来预测，当前也可以基于它继续训练。
 
-> 由于文件较大，其中数据文件和模型没有上传，可以自行至官网下载即可
+> 由于文件较大，预训练的模型没有上传，可以自行至官网下载即可
 
 ### 3.3 代码运行
 
