@@ -270,7 +270,7 @@ bash ./bin/run_predict.sh ernie <trained model path>
 
 该部分可忽略，是提交的一些记录，没有整理。
 
-### 2.1 20210404
+### 4.1 20210404
 
 官方的fine-tuned model
 
@@ -286,7 +286,7 @@ bash ./bin/run_predict.sh ernie <trained model path>
 {"F1": "53.429", "EM": "35.000", "TOTAL": 20, "SKIP": 0, "TAG": "reasoning"}
 ```
 
-### 2.2 20210405
+### 4.2 20210405
 
 基于Roberta model + fine tune，
 
@@ -304,7 +304,7 @@ epoch=2，batch_size=8，
 {"F1": "34.352", "EM": "30.000", "TOTAL": 20, "SKIP": 0, "TAG": "reasoning"}
 ```
 
-### 2.3 20210410
+### 4.3 20210410
 
 基于fine-tuned模型继续微调：
 
@@ -326,7 +326,7 @@ warmup_proportion=0.1
 
 增加robust训练数据（14520），共17520条，训练中训练效果
 
-### 2.4 20200411
+### 4.4 20200411
 
 训练集、验证集的有无答案的分布：
 
@@ -415,7 +415,7 @@ save_steps=1000000
   
   the best metrics&threshold is  (0.98989898989899, 62.43218731029048, 55.663716814159294)
 
-### 2.5 20200416
+### 4.5 20200416
 
 - 尝试1
 
