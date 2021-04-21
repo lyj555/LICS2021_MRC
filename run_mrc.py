@@ -18,7 +18,7 @@ from utils.input_args import parse_args
 from models.loss_layer import CrossEntropyLossForQA
 from models.model_layer import ErnieForQuestionAnswering, BertForQuestionAnswering, RobertaForQuestionAnswering
 from evaluate import read_mrc_dataset, read_model_prediction, evaluate, print_metrics
-from confirm_cls_threshold import confirm_threshold
+from utils.confirm_cls_threshold import confirm_threshold
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.INFO)
 

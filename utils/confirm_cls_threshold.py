@@ -45,7 +45,7 @@ def confirm_threshold(raw_data_file_path, pred_dir, pred_file_prefix):
 
 
 if __name__ == "__main__":
-    raw_data_file_path = "./dataset/dev.json"
+    raw_data_file_path = "../dataset/dev.json"
     pred_dir = "./output/eval/0411_1418"
     pred_file_prefix = "dev"
     confirm_threshold(raw_data_file_path, pred_dir, pred_file_prefix)
