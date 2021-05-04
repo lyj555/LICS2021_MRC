@@ -35,7 +35,7 @@ def confirm_threshold(raw_data_file_path, pred_dir, pred_file_prefix):
     ret_metrics = []
     for ind, candi_thresh in enumerate(candidate_thresholds):
         pred_ans = _pred_ans_by_thresh(pred_dir, pred_file_prefix, candi_thresh)
-        F1, EM, _, _ = evaluate(ref_ans, pred_ans)
+        F1, EM, _, _, _ = evaluate(ref_ans, pred_ans)
         ret_metrics.append((candi_thresh, F1, EM))
         if (ind + 1) % 20 == 0:
             print(f"now {ind + 1}/{len(candidate_thresholds)}, F1 is {F1}, EM is {EM}")
