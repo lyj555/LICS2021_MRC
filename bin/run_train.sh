@@ -8,34 +8,36 @@
 #   LICS MRC部分模型训练
 # Arguments:
 #     $1: model_type, required, ernie or bert or roberta
-#     $2: pretrained_model_path, required, the pretrained model path
-#     $3: device, optional, cpu or gpu, default is gpu
-#     $4: python_path, optional, if empty, will use default python
+#     $2: train_data_path, optional, train data path
+#     $3: dev_data_path, optional, dev data path
+#     $4: pretrained_model_path, required, the pretrained model path
+#     $5: device, optional, cpu or gpu, default is gpu
+#     $6: python_path, optional, if empty, will use default python
 # Example: bash run_train.sh ernie <pretrained path>
 # Returns:
 #   succ: exit 0
 #   fail: exit 1
 
 model_type=$1
-pretrained_model_path=$2
-device=$3
-python_path=$4
+train_data_path=$2
+dev_data_path=$3
+pretrained_model_path=$4
+device=$5
+python_path=$6
 
 [[ -z $model_type ]] && echo "param model_type can't empty, should in (ernie, bert, roberta)!!!" && exit 1
-[[ -d $pretrained_model_path ]] && echo "param pretrained_model_path must be directory!!!" && exit 1
-[[ -z $device ]] && device="gpu"
+[[ ! -d $pretrained_model_path ]] && echo "param pretrained_model_path must be directory!!!" && exit 1
+[[ -z $device ]] && device="cpu"
 [[ -z $python_path ]] && python_path=$(which python)
 [[ ! -x $python_path ]] && echo "the python_path: $python_path is not executable!" && exit 1
 
 sh_dir=$(cd $(dirname ${BASH_SOURCE[0]}); pwd)  # current directory path
 project_dir=${sh_dir}/..
 
-device="cpu"
-model_type="ernie"
+# model_type="ernie"
 
-train_data_path=${project_dir}/dataset/small.json
-dev_data_path=${project_dir}/dataset/small.json
-# pretrained_model_path=${project_dir}/finetuned_model
+[[ -z $train_data_path ]] && train_data_path=${project_dir}/dataset/small.json
+[[ -z $dev_data_path ]] && dev_data_path=${project_dir}/dataset/small.json
 output_dir=${project_dir}/output/train/$(date +%m%d_%H%M)  # output directory
 
 train_epochs=1

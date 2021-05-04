@@ -123,8 +123,8 @@ class ModelOperation(object):
         ref_ans = read_mrc_dataset(raw_data_path, tag=tag)
         assert len(ref_ans) > 0, 'Find no sample with tag - {}'.format(tag)
         pred_ans = read_model_prediction(pred_data_path)
-        F1, EM, TOTAL, SKIP = evaluate(ref_ans, pred_ans, verbose=False)
-        print_metrics(F1, EM, TOTAL, SKIP, tag)
+        F1, EM, ans_score, TOTAL, SKIP = evaluate(ref_ans, pred_ans, verbose=False)
+        print_metrics(F1, EM, ans_score, TOTAL, SKIP, tag)
 
     def train_and_eval(self, args):
         self._initialize_run_env(args.device, args.seed)
@@ -156,6 +156,7 @@ class ModelOperation(object):
                          args.cls_threshold, args.n_best_size)
             logging.info("predict success.")
 
+    @paddle.no_grad()
     def _predict(self, data_loader, output_dir, max_answer_length, cls_threshold,
                  n_best_size=10, prefix=""):
         self.model.eval()

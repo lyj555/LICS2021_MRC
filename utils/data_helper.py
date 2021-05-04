@@ -172,8 +172,8 @@ class DataHelper(object):
                     else:
                         # Otherwise move the token_start_index and token_end_index to the two ends of the answer.
                         # Note: we could go after the last offset if the answer is the last word (edge case).
-                        while token_start_index < len(offsets) and offsets[
-                                token_start_index][0] <= start_char:
+                        while token_start_index < len(offsets) and \
+                                offsets[token_start_index][0] <= start_char:
                             token_start_index += 1
                         token_example["start_positions"] = token_start_index - 1
                         while offsets[token_end_index][1] >= end_char:

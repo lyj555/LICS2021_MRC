@@ -53,3 +53,13 @@ ${python_path} ${project_dir}/run_mrc.py \
     --max_seq_length $max_seq_length \
     --max_answer_length $max_answer_length --doc_stride $doc_stride \
     --cls_threshold $cls_threshold
+
+# [2]. show real & predict answer
+base_name=$(basename $dev_data_path)
+file_name=${base_name%.json}
+answer_path=$output_dir/${file_name}_predictions.json
+raw_path=$dev_data_path
+save_path=$output_dir/${file_name}_answers.txt
+
+# [3]. concat text and answer for debugging
+${python_path} ${project_dir}/utils/show_context_answer.py $answer_path $raw_path $save_path

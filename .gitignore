@@ -15,3 +15,4 @@ roberta_wwm_ext/*
 roberta_wwm_ext_large/*
 !roberta_wwm_ext_large/.gitkeep
 bin/download.sh
+output

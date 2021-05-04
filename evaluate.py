@@ -105,6 +105,7 @@ def evaluate(ref_ans, pred_ans, verbose=False):
     em = 0
     total_count = 0
     skip_count = 0
+    right_count = 0
     for query_id, sample in ref_ans.items():
         total_count += 1
         para = sample['para']
@@ -127,12 +128,15 @@ def evaluate(ref_ans, pred_ans, verbose=False):
             if prediction.lower() == 'no answer':
                 _f1 = 1.0
                 _em = 1.0
+                right_count += 1
             else:
                 _f1 = 0.0
                 _em = 0.0
         else:
             _f1 = calc_f1_score(answers, prediction)
             _em = calc_em_score(answers, prediction)
+            if prediction.lower() != "no answer":
+                right_count += 1
         f1 += _f1
         em += _em
         if verbose:
@@ -146,7 +150,9 @@ def evaluate(ref_ans, pred_ans, verbose=False):
 
     f1_score = 100.0 * f1 / total_count
     em_score = 100.0 * em / total_count
-    return f1_score, em_score, total_count, skip_count
+    ans_score = 100.0 * right_count / total_count
+    # print(f"answer score is {ans_score}")
+    return f1_score, em_score, ans_score, total_count, skip_count
 
 
 def calc_f1_score(answers, prediction, debug=False):
@@ -219,11 +225,12 @@ def read_model_prediction(filename):
     return model_prediction
 
 
-def print_metrics(F1, EM, TOTAL, SKIP, tag):
+def print_metrics(F1, EM, ans_score, TOTAL, SKIP, tag):
     """print metrics"""
     output_result = OrderedDict()
     output_result['F1'] = '%.3f' % F1
     output_result['EM'] = '%.3f' % EM
+    output_result['ans_score'] = '%.3f' % ans_score
     output_result['TOTAL'] = TOTAL
     output_result['SKIP'] = SKIP
     if tag is not None:

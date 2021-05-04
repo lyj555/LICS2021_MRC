@@ -21,7 +21,7 @@
 model_type=$1
 model_path=$2
 device=$3
-dev_data_path=$4
+predict_data_path=$4
 cls_threshold=$5
 python_path=$6
 
@@ -46,7 +46,7 @@ max_seq_length=512
 max_answer_length=512
 doc_stride=128
 
-n_best_size=10
+n_best_size=5
 
 # [2]. do predict
 ${python_path} ${project_dir}/run_mrc.py \
