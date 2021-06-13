@@ -1,7 +1,7 @@
 # LICS2021 MRC
 
 ## 1. 项目&任务介绍
-本项目基于官方给定的baseline（[**DuReader-Checklist-BASELINE**](https://github.com/PaddlePaddle/Research/tree/master/NLP/DuReader-Checklist-BASELINE)）进行二次改造，对整个代码框架做了简单的重构，对核心网络结构添加了注释，解耦了数据读取的模块，并添加了阈值确认的功能，一些小的细节也做了改进。
+本项目基于官方给定的baseline（[**DuReader-Checklist-BASELINE**](https://github.com/PaddlePaddle/Research/tree/master/NLP/DuReader-Checklist-BASELINE)）进行二次改造，对整个代码框架做了简单的重构，对核心网络结构添加了注释，解耦了数据读取的模块，并添加了阈值确认的功能，一些小的细节也做了改进。最终的B榜的排名为31名。
 
 本次任务为[2021语言与智能技术竞赛](http://lic2021.ccf.org.cn/)：机器阅读理解任务，机器阅读理解 (Machine Reading Comprehension) 是指让机器阅读文本，然后回答和阅读内容相关的问题。
 
