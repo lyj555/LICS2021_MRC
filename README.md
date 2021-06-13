@@ -637,12 +637,114 @@ save_steps=1000000
   now 100/100, F1 is 52.30088495575221, EM is 52.30088495575221
   the best metrics&threshold is  (0.8181818181818182, 64.04877537228401, 54.7787610619469)
   ```
-
-​       线上：（F1：56.203，EM：46.973）
+  
+  线上：（F1：56.203，EM：46.973）
+  
+  badcase查看（仅no answer探查）：
+  
+  ```
+  df_not1 = df[(df.real_answer == "no answer") & (df.pred_answer != "no answer")]  # 71/1130
+  
+  df_not2 = df[(df.real_answer != "no answer") & (df.pred_answer == "no answer")]  # 207/1130
+  ```
+  
+  说明模型对于是否存在答案部分，识别的不准确
 
 - 尝试6
 
+  两阶段获取答案，1）是否存在答案单独学习，2）答案部分单独学习（可以通过是否存在辅助训练）
   
+
+### 4.7 20210515
+
+- 尝试1
+
+  将训练集和验证集混合，打散，基于官方finetune_model继续训练，train_epoch=2, batch_size=2, lr=3e-5，最终线上效果（58.362, 47.847）
+
+- 尝试2
+
+  基于答案的后校准（strip("#\_@\^")，大于200置为no answer），效果变差（58.113，47.924）
+
+- 尝试3（增加训练数据）
+
+  - 基于robust数据
+
+    该数据中均存在答案，需要构造no answer的样本，构造思路：随机选择question。
+
+    ```python
+    import numpy as np
+    import copy
+    
+    def random_index(start, end, del_ind):
+        ind = np.random.randint(start, end)
+        try_time = 10
+        count = 0
+        while count < try_time and ind == del_ind:
+           ind = np.random.randint(start, end)
+           count += 1
+        return ind
+        
+    fake_samples = copy.deepcopy(ro["data"][0]["paragraphs"])
+    for ind, sample in enumerate(fake_samples):
+        rand_ind = random_index(0, len(fake_samples), ind)
+        sample["qas"][0]["question"] = questions[rand_ind]
+        sample["qas"][0]["answers"][0]["text"] = ""
+        sample["qas"][0]["answers"][0]["answer_start"] = -1
+        
+    ro["data"][0]["paragraphs"].extend(fake_samples)
+    for i in ro["data"][0]["paragraphs"]:
+        i["qas"][0]["is_impossible"] = True
+        
+    np.random.shuffle(ro["data"][0]["paragraphs"])
+    
+    for i in ro["data"][0]["paragraphs"]:
+         if i["qas"][0]["answers"][0]["answer_start"] != -1:
+             i["qas"][0]["is_impossible"] = False
+            
+    with open("./dataset/robust_train_fake.json", "w") as f:
+         json.dump(ro, f, ensure_ascii=False)
+    ```
+
+    ernie10+robust数据（3w左右）微调，之后再基于微调的数据使用 train&dev 训练，线上效果仍为58左右，和未添加预训练一样，故而舍弃改策略。
+
+  - 基于dureader2.0（大数据量的post-train）
+
+    ```python
+    def format_data(sample):
+        data = {}
+        if not len(sample['match_scores']):
+            return None
+        if sample['match_scores'][0] < 0.7:
+            return None
+        if not len(sample['answer_docs']):
+            return None
+        
+        if sample['answer_docs'][0] >= len(sample['documents']):
+            return None
+        data['qas_id'] = sample['question_id']
+        data['question_text'] = sample['question']
+        doc = sample['documents'][int(sample['answer_docs'][0])]  # related_doc
+        split_para = doc['segmented_paragraphs'][int(doc['most_related_para'])]
+        ##
+        else_para = ''
+        for i in range(len(doc['segmented_paragraphs'])):
+            if i != int(doc['most_related_para']):
+                else_para += doc['paragraphs'][i] + '##'
+        para = ''.join(split_para)
+        # 去除<>的代码
+        if len(para) > 500:
+            return None
+        data['doc'] = (para + '##' + else_para)[:500]
+        answer_span = sample['answer_spans']
+        if not len(answer_span):
+            return None
+        data['orig_answer_text'] = ''.join(split_para[answer_span[0][0]:answer_span[0][1]+1])
+        data['start_position'] = len(''.join(split_para[:answer_span[0][0]]))
+        data['end_position'] = data['start_position'] + len(data['orig_answer_text'])
+        return data
+    ```
+
+    ernie10+dureader(search + zhidao)（35w左右）微调，之后再基于微调的数据使用 train&dev 训练，线上效果（62.121，51.526）
 
 ## 5. 待优化点记录
 

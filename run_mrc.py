@@ -95,7 +95,7 @@ class ModelOperation(object):
                 loss = criterion(logits, (start_positions, end_positions, answerable_label))
 
                 if global_step % args.logging_steps == 0:
-                    print(
+                    logging.info(
                         "global step %d, epoch: %d, batch: %d, loss: %f, speed: %.2f step/s"
                         % (global_step, epoch, step, loss,
                            args.logging_steps / (time.time() - tic_train)))
@@ -116,7 +116,7 @@ class ModelOperation(object):
                             self.model._layers if isinstance(self.model, paddle.DataParallel) else self.model
                         model_to_save.save_pretrained(output_dir)
                         self.tokenizer.save_pretrained(output_dir)
-                        print('Saving checkpoint to:', output_dir)
+                        logging.info('Saving checkpoint to:', output_dir)
 
     @staticmethod
     def _evaluate(raw_data_path, pred_data_path, tag=None):
@@ -172,8 +172,8 @@ class ModelOperation(object):
 
             for idx in range(start_logits_tensor.shape[0]):
                 if len(all_start_logits) % 1000 == 0 and len(all_start_logits):
-                    print("Processing example: %d" % len(all_start_logits))
-                    print('time per 1000:', time.time() - tic_eval)
+                    logging.info("Processing example: %d" % len(all_start_logits))
+                    logging.info('time per 1000:', time.time() - tic_eval)
                     tic_eval = time.time()
 
                 all_start_logits.append(start_logits_tensor.numpy()[idx])
@@ -236,6 +236,10 @@ if __name__ == "__main__":
     #              "--pretrained_model_path ./finetuned_model --train_epochs 1 " \
     #              "--batch_size 2 --max_seq_length 64 --max_answer_length 30"
     args = parse_args(input_arg=None)
+    logging.info('-----------  Configuration Arguments -----------')
+    for arg, value in sorted(vars(args).items()):
+        logging.info(f'{arg}: {value}')
+    logging.info('------------------------------------------------')
 
     model_oper = ModelOperation()
     model_oper.train_and_eval(args)
